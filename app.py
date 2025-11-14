@@ -46,6 +46,8 @@ def process_payment():
             if field not in data:
                 return jsonify({'success': False, 'error': f'Missing field: {field}'}), 400
         
+        # Bug: No validation for negative amounts!
+        
         # Simulate payment processing delay
         import time
         time.sleep(1)
