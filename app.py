@@ -5,6 +5,7 @@ import os
 from datetime import datetime
 import random
 import string
+import math
 
 app = Flask(__name__, static_folder='static')
 CORS(app)
@@ -46,8 +47,14 @@ def process_payment():
             if field not in data:
                 return jsonify({'success': False, 'error': f'Missing field: {field}'}), 400
         
-        # Bug: No validation for negative amounts!
-        
+        try:
+            amount = float(data['amount'])
+        except (TypeError, ValueError):
+            return jsonify({'success': False, 'error': 'Amount must be a valid number.'}), 400
+
+        if not math.isfinite(amount) or amount <= 0:
+            return jsonify({'success': False, 'error': 'Amount must be greater than zero.'}), 400
+
         # Simulate payment processing delay
         import time
         time.sleep(1)
@@ -62,7 +69,7 @@ def process_payment():
         # Create payment record
         payment = {
             'transaction_id': generate_transaction_id(),
-            'amount': data['amount'],
+            'amount': amount,
             'currency': data.get('currency', 'USD'),
             'card_last_four': data['cardNumber'][-4:],
             'card_name': data['cardName'],

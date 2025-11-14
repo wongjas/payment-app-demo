@@ -99,12 +99,11 @@ document.getElementById('payment-form').addEventListener('submit', async functio
         amount: parseFloat(document.getElementById('amount').value),
         currency: 'USD'
     };
-    
-    // Bug: Removed validation for negative amounts!
-    // if (formData.amount <= 0) {
-    //     showError('Please enter a valid amount');
-    //     return;
-    // }
+
+    if (!Number.isFinite(formData.amount) || formData.amount <= 0) {
+        showError('Please enter a valid amount greater than zero');
+        return;
+    }
     
     if (formData.cardNumber.length < 13) {
         showError('Please enter a valid card number');
