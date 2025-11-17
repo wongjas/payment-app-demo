@@ -55,8 +55,8 @@ class TestPaymentAPI:
         assert len(payments) == 1
         assert payments[0]['amount'] == 99.99
     
-    def test_negative_payment_bug(self, client):
-        """Test that negative payments are allowed (this is the bug!)"""
+    def test_negative_payment_rejected(self, client):
+        """Test that negative payments are properly rejected"""
         payment_data = {
             'cardNumber': '4532148803436467',
             'cardName': 'TEST USER',
@@ -72,15 +72,13 @@ class TestPaymentAPI:
         
         data = json.loads(response.data)
         
-        # Bug: This should fail but doesn't!
-        # Note: May randomly fail due to 10% failure simulation
-        if response.status_code == 200:
-            assert data['success'] is True
-            assert data['amount'] == -50.00
-        else:
-            # Random failure occurred
-            assert response.status_code == 400
-            assert data['success'] is False
+        # Negative payments should be rejected
+        assert response.status_code == 400
+        assert data['success'] is False
+        assert 'error' in data
+        # Check that error message mentions amount validation
+        error_msg = data['error'].lower()
+        assert 'amount' in error_msg or 'negative' in error_msg or 'invalid' in error_msg or 'greater' in error_msg
     
     def test_missing_fields(self, client):
         """Test that missing required fields return error"""
