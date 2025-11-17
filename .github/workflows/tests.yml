@@ -43,11 +43,11 @@ jobs:
         id: status
         run: |
           if [ "${{ steps.tests.outcome }}" == "success" ]; then
-            echo "color=good" >> $GITHUB_OUTPUT
+            echo "color=#36a64f" >> $GITHUB_OUTPUT
             echo "emoji=✅" >> $GITHUB_OUTPUT
             echo "status=Success" >> $GITHUB_OUTPUT
           else
-            echo "color=danger" >> $GITHUB_OUTPUT
+            echo "color=#ff0000" >> $GITHUB_OUTPUT
             echo "emoji=❌" >> $GITHUB_OUTPUT
             echo "status=Failed" >> $GITHUB_OUTPUT
           fi
