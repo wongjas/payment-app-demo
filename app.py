@@ -47,14 +47,10 @@ def process_payment():
             if field not in data:
                 return jsonify({'success': False, 'error': f'Missing field: {field}'}), 400
         
-        try:
-            amount = float(data['amount'])
-        except (TypeError, ValueError):
-            return jsonify({'success': False, 'error': 'Amount must be a valid number.'}), 400
-
-        if not math.isfinite(amount) or amount <= 0:
-            return jsonify({'success': False, 'error': 'Amount must be greater than zero.'}), 400
-
+        # Bug: No validation for negative amounts!
+        # We just convert to float but don't check if it's positive
+        amount = float(data['amount'])
+        
         # Simulate payment processing delay
         import time
         time.sleep(1)
