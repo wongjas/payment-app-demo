@@ -8,7 +8,7 @@ A beautiful, modern fake payment processing application for prototyping and demo
 - No real payments are processed
 - No real card validation occurs
 - Do not use in production
-- Do not enter real payment information
+- Do not enter real payment information 
 
 ## ✨ Features
 
