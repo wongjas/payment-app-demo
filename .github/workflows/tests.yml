@@ -44,14 +44,18 @@ jobs:
           webhook-type: incoming-webhook
           payload: |
             {
-              "text": "*GitHub Action build result*: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
-              "blocks": [
+              "attachments": [
                 {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*GitHub Action build result*: ${{ job.status }}\n*Repository*: ${{ github.repository }}\n*Branch*: ${{ github.ref_name }}\n*Commit*: <${{ github.event.pull_request.html_url || github.event.head_commit.url }}|View Details>"
-                  }
+                  "color": "${{ job.status == 'success' && 'good' || 'danger' }}",
+                  "blocks": [
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "*GitHub Action Result*: ${{ job.status == 'success' && '✅ Success' || '❌ Failed' }}\n*Repository*: ${{ github.repository }}\n*Branch*: `${{ github.ref_name }}`\n*Commit*: <${{ github.event.pull_request.html_url || github.event.head_commit.url }}|View Details>"
+                      }
+                    }
+                  ]
                 }
               ]
             }
