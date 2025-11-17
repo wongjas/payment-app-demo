@@ -136,4 +136,7 @@ if __name__ == '__main__':
     print("\n⚠️  Note: This is a FAKE payment system for prototyping only!")
     print("="*60 + "\n")
 
-    app.run(debug=True, port=5000)
+    # Debug mode is enabled for development/demo purposes only
+    # In production, use a WSGI server like gunicorn and disable debug
+    debug_mode = os.environ.get('FLASK_DEBUG', 'true').lower() == 'true'
+    app.run(debug=debug_mode, port=5000)

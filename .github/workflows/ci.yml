@@ -7,6 +7,9 @@ on:
     branches: [ main, master, develop ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -50,6 +53,7 @@ jobs:
 
     - name: Test application startup
       run: |
+        export FLASK_DEBUG=false
         timeout 10 python app.py &
         APP_PID=$!
         sleep 5
