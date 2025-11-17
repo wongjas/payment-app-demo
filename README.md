@@ -10,7 +10,7 @@ A beautiful, modern fake payment processing application for prototyping and demo
 - Do not use in production
 - Do not enter real payment information 
 
-## ✨ Features 
+## ✨ Features
 
 - 🎨 Modern, beautiful UI with gradient design
 - 💳 Realistic payment form with card input formatting
