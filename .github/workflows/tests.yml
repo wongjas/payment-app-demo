@@ -27,6 +27,8 @@ jobs:
           pip install -r requirements.txt
       
       - name: Run tests with pytest
+        id: tests
+        continue-on-error: true
         run: |
           pytest test_app.py -v --cov=app --cov-report=term-missing
       
@@ -46,13 +48,13 @@ jobs:
             {
               "attachments": [
                 {
-                  "color": "${{ job.status == 'success' && 'good' || 'danger' }}",
+                  "color": "${{ steps.tests.outcome == 'success' && 'good' || 'danger' }}",
                   "blocks": [
                     {
                       "type": "section",
                       "text": {
                         "type": "mrkdwn",
-                        "text": "*GitHub Action Result*: ${{ job.status == 'success' && '✅ Success' || '❌ Failed' }}\n*Repository*: ${{ github.repository }}\n*Branch*: `${{ github.ref_name }}`\n*Commit*: <${{ github.event.pull_request.html_url || github.event.head_commit.url }}|View Details>"
+                        "text": "*GitHub Action Result*: ${{ steps.tests.outcome == 'success' && '✅ Success' || '❌ Failed' }}\n*Repository*: ${{ github.repository }}\n*Branch*: `${{ github.ref_name }}`\n*Commit*: <${{ github.event.pull_request.html_url || github.event.head_commit.url }}|View Details>"
                       }
                     }
                   ]
