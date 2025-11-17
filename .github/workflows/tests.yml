@@ -38,6 +38,20 @@ jobs:
           echo "✅ Tests completed!"
           echo "Check the logs above for test results."
 
+      - name: Set status color
+        if: always()
+        id: status
+        run: |
+          if [ "${{ steps.tests.outcome }}" == "success" ]; then
+            echo "color=good" >> $GITHUB_OUTPUT
+            echo "emoji=✅" >> $GITHUB_OUTPUT
+            echo "status=Success" >> $GITHUB_OUTPUT
+          else
+            echo "color=danger" >> $GITHUB_OUTPUT
+            echo "emoji=❌" >> $GITHUB_OUTPUT
+            echo "status=Failed" >> $GITHUB_OUTPUT
+          fi
+
       - name: Post a message in a channel
         if: always()
         uses: slackapi/slack-github-action@v2.1.1
@@ -48,13 +62,13 @@ jobs:
             {
               "attachments": [
                 {
-                  "color": "${{ steps.tests.outcome == 'success' && 'good' || 'danger' }}",
+                  "color": "${{ steps.status.outputs.color }}",
                   "blocks": [
                     {
                       "type": "section",
                       "text": {
                         "type": "mrkdwn",
-                        "text": "*GitHub Action Result*: ${{ steps.tests.outcome == 'success' && '✅ Success' || '❌ Failed' }}\n*Repository*: ${{ github.repository }}\n*Branch*: `${{ github.ref_name }}`\n*Commit*: <${{ github.event.pull_request.html_url || github.event.head_commit.url }}|View Details>"
+                        "text": "*GitHub Action Result*: ${{ steps.status.outputs.emoji }} ${{ steps.status.outputs.status }}\n*Repository*: ${{ github.repository }}\n*Branch*: `${{ github.ref_name }}`\n*Commit*: <${{ github.event.pull_request.html_url || github.event.head_commit.url }}|View Details>"
                       }
                     }
                   ]
