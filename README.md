@@ -1,5 +1,9 @@
 # 💳 Fake Payment App - Prototype Demo
 
+[![CI/CD Pipeline](https://github.com/wongjas/payment-app-demo/actions/workflows/ci.yml/badge.svg)](https://github.com/wongjas/payment-app-demo/actions/workflows/ci.yml)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 A beautiful, modern fake payment processing application for prototyping and demonstrations. This app includes a Flask backend API and a polished frontend interface with a realistic payment experience.
 
 ## ⚠️ Important Notice
@@ -156,6 +160,43 @@ if random.random() < 0.1:  # Change 0.1 to desired probability (0.0-1.0)
 ```
 
 ## 🛠️ Development
+
+### CI/CD Pipeline
+
+This repository includes a comprehensive CI/CD pipeline that runs on every push and pull request:
+
+- **Multi-version Python Testing**: Runs tests on Python 3.9, 3.10, and 3.11
+- **Code Quality Checks**: Flake8 linting to ensure code quality
+- **Automated Testing**: Full test suite with pytest and coverage reporting
+- **Security Scanning**: Safety and Bandit scans for vulnerabilities
+- **Build Notifications**: Automatic status updates on build success/failure
+
+The CI/CD workflow is defined in `.github/workflows/ci.yml` and runs automatically on:
+- Pushes to `main`, `master`, or `develop` branches
+- Pull requests targeting these branches
+- Manual workflow dispatch
+
+### Running Tests Locally
+
+Install development dependencies:
+```bash
+pip install -r requirements-dev.txt
+```
+
+Run the test suite:
+```bash
+pytest
+```
+
+Run tests with coverage:
+```bash
+pytest --cov=. --cov-report=term-missing
+```
+
+Run linting:
+```bash
+flake8 .
+```
 
 ### Running in Debug Mode
 The app runs in debug mode by default, which includes:
