@@ -46,14 +46,14 @@ def test_payment_success(client):
         'currency': 'USD'
     }
     response = client.post('/api/payment',
-                          data=json.dumps(payment_data),
-                          content_type='application/json')
-    
+                           data=json.dumps(payment_data),
+                           content_type='application/json')
+
     # Note: This might fail randomly due to the 10% failure rate
     # In a real test, we'd mock the random function
     if response.status_code == 200:
         data = json.loads(response.data)
-        assert data['success'] == True
+        assert data['success'] is True
         assert 'transaction_id' in data
         assert data['amount'] == 99.99
         assert data['currency'] == 'USD'
@@ -69,11 +69,11 @@ def test_payment_missing_field(client):
         'amount': 99.99
     }
     response = client.post('/api/payment',
-                          data=json.dumps(payment_data),
-                          content_type='application/json')
+                           data=json.dumps(payment_data),
+                           content_type='application/json')
     assert response.status_code == 400
     data = json.loads(response.data)
-    assert data['success'] == False
+    assert data['success'] is False
     assert 'error' in data
 
 
@@ -88,11 +88,11 @@ def test_payment_invalid_amount(client):
         'currency': 'USD'
     }
     response = client.post('/api/payment',
-                          data=json.dumps(payment_data),
-                          content_type='application/json')
+                           data=json.dumps(payment_data),
+                           content_type='application/json')
     assert response.status_code == 400
     data = json.loads(response.data)
-    assert data['success'] == False
+    assert data['success'] is False
 
 
 def test_payment_zero_amount(client):
@@ -106,11 +106,11 @@ def test_payment_zero_amount(client):
         'currency': 'USD'
     }
     response = client.post('/api/payment',
-                          data=json.dumps(payment_data),
-                          content_type='application/json')
+                           data=json.dumps(payment_data),
+                           content_type='application/json')
     assert response.status_code == 400
     data = json.loads(response.data)
-    assert data['success'] == False
+    assert data['success'] is False
 
 
 def test_payment_negative_amount(client):
@@ -124,11 +124,11 @@ def test_payment_negative_amount(client):
         'currency': 'USD'
     }
     response = client.post('/api/payment',
-                          data=json.dumps(payment_data),
-                          content_type='application/json')
+                           data=json.dumps(payment_data),
+                           content_type='application/json')
     assert response.status_code == 400
     data = json.loads(response.data)
-    assert data['success'] == False
+    assert data['success'] is False
 
 
 def test_get_transactions_empty(client):
@@ -136,7 +136,7 @@ def test_get_transactions_empty(client):
     response = client.get('/api/transactions')
     assert response.status_code == 200
     data = json.loads(response.data)
-    assert data['success'] == True
+    assert data['success'] is True
     assert data['transactions'] == []
 
 
@@ -145,5 +145,5 @@ def test_get_transaction_not_found(client):
     response = client.get('/api/transaction/NONEXISTENT')
     assert response.status_code == 404
     data = json.loads(response.data)
-    assert data['success'] == False
+    assert data['success'] is False
     assert 'error' in data

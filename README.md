@@ -171,6 +171,20 @@ This repository includes a comprehensive CI/CD pipeline that runs on every push 
 - **Security Scanning**: Safety and Bandit scans for vulnerabilities
 - **Build Notifications**: Automatic status updates on build success/failure
 
+#### Build Status Notifications
+
+The CI/CD pipeline provides notifications through multiple channels:
+
+1. **GitHub PR Checks**: All pull requests show build status with detailed check results
+2. **Status Badge**: The README displays a real-time build status badge
+3. **GitHub Actions UI**: View detailed build logs in the Actions tab
+4. **Email Notifications**: GitHub sends emails on workflow failures (configurable in your GitHub settings)
+
+To view build results:
+- Check the status badge at the top of the README
+- View the "Actions" tab in the GitHub repository
+- Check PR checks for detailed test results and coverage
+
 The CI/CD workflow is defined in `.github/workflows/ci.yml` and runs automatically on:
 - Pushes to `main`, `master`, or `develop` branches
 - Pull requests targeting these branches

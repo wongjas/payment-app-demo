@@ -104,9 +104,28 @@ jobs:
     steps:
     - name: Check build status
       run: |
+        echo "==================================================="
+        echo "Build Summary"
+        echo "==================================================="
+        echo "Build and Test: ${{ needs.build-and-test.result }}"
+        echo "Security Scan: ${{ needs.security-scan.result }}"
+        echo "==================================================="
+        
         if [ "${{ needs.build-and-test.result }}" == "success" ] && [ "${{ needs.security-scan.result }}" == "success" ]; then
-          echo "✅ Build and tests passed successfully!"
+          echo "✅ All checks passed successfully!"
+          echo "The application is ready for deployment."
         else
-          echo "❌ Build or tests failed"
+          echo "❌ Some checks failed. Please review the logs above."
           exit 1
         fi
+    
+    - name: Summary
+      if: always()
+      run: |
+        echo "### Build Status Summary 📊" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "| Job | Status |" >> $GITHUB_STEP_SUMMARY
+        echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
+        echo "| Build and Test | ${{ needs.build-and-test.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Security Scan | ${{ needs.security-scan.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+
