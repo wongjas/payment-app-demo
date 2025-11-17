@@ -55,13 +55,6 @@ def process_payment():
         import time
         time.sleep(1)
         
-        # Simulate random failure (10% chance)
-        if random.random() < 0.1:
-            return jsonify({
-                'success': False,
-                'error': 'Payment declined. Please try again or use a different card.'
-            }), 400
-        
         # Create payment record
         payment = {
             'transaction_id': generate_transaction_id(),

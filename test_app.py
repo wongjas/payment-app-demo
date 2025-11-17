@@ -189,9 +189,9 @@ class TestPaymentAPI:
         response = client.get('/api/transactions')
         data = json.loads(response.data)
         
-        # Note: May have fewer than 3 due to 10% random failure
-        assert len(data['transactions']) >= 2
-        assert len(data['transactions']) <= 3
+        assert len(data['transactions']) == 3
+        stored_amounts = [t['amount'] for t in data['transactions']]
+        assert sorted(stored_amounts) == sorted(payment_amounts)
     
     def test_card_last_four_stored(self, client):
         """Test that only last 4 digits of card are stored"""
