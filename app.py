@@ -128,4 +128,6 @@ if __name__ == '__main__':
     print("\n⚠️  Note: This is a FAKE payment system for prototyping only!")
     print("="*60 + "\n")
 
+    # Debug mode is enabled for development/demo purposes
+    # WARNING: Never use debug=True in production!
     app.run(debug=True, port=5000)
