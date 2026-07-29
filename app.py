@@ -22,6 +22,11 @@ def index():
     """Serve the main payment page"""
     return send_from_directory('static', 'index.html')
 
+@app.route('/editor')
+def editor():
+    """Serve the browser website editor page"""
+    return send_from_directory('static', 'editor.html')
+
 @app.route('/favicon.ico')
 def favicon():
     """Return a 204 No Content for favicon requests"""

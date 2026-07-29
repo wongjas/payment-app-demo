@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecurePay - Browser Website Editor</title>
+    <style>
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --success: #10b981;
+            --bg: #0f172a;
+            --panel: #111827;
+            --panel-soft: #1f2937;
+            --text: #f3f4f6;
+            --muted: #9ca3af;
+            --border: #374151;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(160deg, #0f172a 0%, #1e1b4b 100%);
+            color: var(--text);
+        }
+
+        .app {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem;
+            display: grid;
+            gap: 1rem;
+        }
+
+        .header {
+            background: rgba(17, 24, 39, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .title {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+        }
+
+        .logo {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        .title h1 {
+            margin: 0;
+            font-size: 1.05rem;
+            font-weight: 650;
+        }
+
+        .subtitle {
+            margin: 0.2rem 0 0;
+            color: var(--muted);
+            font-size: 0.86rem;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+        }
+
+        button {
+            border: 1px solid var(--border);
+            background: var(--panel-soft);
+            color: var(--text);
+            border-radius: 8px;
+            padding: 0.55rem 0.8rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.18s ease;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+            border-color: #6b7280;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 1rem;
+            min-height: calc(100vh - 140px);
+        }
+
+        .editors {
+            display: grid;
+            grid-template-rows: 1fr 1fr 1fr;
+            gap: 1rem;
+            min-height: 0;
+        }
+
+        .editor-card,
+        .preview-card {
+            background: rgba(17, 24, 39, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            overflow: hidden;
+            display: grid;
+            grid-template-rows: auto 1fr;
+            min-height: 0;
+        }
+
+        .card-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 0.8rem;
+            color: var(--muted);
+            background: rgba(0, 0, 0, 0.16);
+        }
+
+        .card-head strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            resize: none;
+            padding: 0.8rem;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.82rem;
+            line-height: 1.45;
+            background: #0b1220;
+            color: #e5e7eb;
+            outline: none;
+        }
+
+        .preview-wrap {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            min-height: 0;
+        }
+
+        .preview-toolbar {
+            padding: 0.6rem 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 0.8rem;
+            color: var(--muted);
+            background: rgba(0, 0, 0, 0.16);
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+        }
+
+        .status {
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+
+        .status.ok {
+            color: var(--success);
+        }
+
+        @media (max-width: 980px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+            .preview-card {
+                min-height: 420px;
+            }
+            .editors {
+                min-height: 680px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="title">
+                <div class="logo" aria-hidden="true"></div>
+                <div>
+                    <h1>Browser Website Editor</h1>
+                    <p class="subtitle">Write HTML, CSS, and JavaScript with live preview</p>
+                </div>
+            </div>
+            <div class="actions">
+                <button id="runBtn" class="btn-primary">Run Preview</button>
+                <button id="resetBtn">Reset Starter Code</button>
+                <button id="downloadBtn">Download HTML</button>
+                <button id="copyBtn">Copy HTML</button>
+            </div>
+        </header>
+
+        <main class="layout">
+            <section class="editors">
+                <article class="editor-card">
+                    <div class="card-head">
+                        <strong>HTML</strong>
+                        <span>Structure</span>
+                    </div>
+                    <textarea id="htmlEditor" spellcheck="false"></textarea>
+                </article>
+
+                <article class="editor-card">
+                    <div class="card-head">
+                        <strong>CSS</strong>
+                        <span>Styling</span>
+                    </div>
+                    <textarea id="cssEditor" spellcheck="false"></textarea>
+                </article>
+
+                <article class="editor-card">
+                    <div class="card-head">
+                        <strong>JavaScript</strong>
+                        <span>Behavior</span>
+                    </div>
+                    <textarea id="jsEditor" spellcheck="false"></textarea>
+                </article>
+            </section>
+
+            <section class="preview-card">
+                <div class="preview-wrap">
+                    <div class="preview-toolbar">
+                        Live Preview · <span id="statusText" class="status">Ready</span>
+                    </div>
+                    <iframe id="previewFrame" title="Live preview output"></iframe>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const htmlEditor = document.getElementById("htmlEditor");
+        const cssEditor = document.getElementById("cssEditor");
+        const jsEditor = document.getElementById("jsEditor");
+        const previewFrame = document.getElementById("previewFrame");
+        const statusText = document.getElementById("statusText");
+
+        const starter = {
+            html: `<!doctype html>
+<html>
+  <body>
+    <main class="card">
+      <h1>Hello from Browser Editor</h1>
+      <p>Edit HTML, CSS, and JavaScript, then click "Run Preview".</p>
+      <button id="cta">Click me</button>
+      <p id="output"></p>
+    </main>
+  </body>
+</html>`,
+            css: `body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(120deg, #e0e7ff, #fdf4ff);
+}
+
+.card {
+  width: min(480px, 92vw);
+  background: white;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+button {
+  border: 0;
+  border-radius: 8px;
+  padding: 0.6rem 0.85rem;
+  color: white;
+  background: #6366f1;
+  cursor: pointer;
+}`,
+            js: `document.getElementById("cta").addEventListener("click", () => {
+  const out = document.getElementById("output");
+  out.textContent = "Button clicked at " + new Date().toLocaleTimeString();
+});`
+        };
+
+        function buildDocument() {
+            return `<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>${cssEditor.value}</style>
+</head>
+<body>
+  ${htmlEditor.value}
+  <script>
+    try {
+      ${jsEditor.value}
+    } catch (error) {
+      console.error("User script error:", error);
+    }
+  <\/script>
+</body>
+</html>`;
+        }
+
+        function setStatus(message, ok) {
+            statusText.textContent = message;
+            statusText.classList.toggle("ok", Boolean(ok));
+        }
+
+        function runPreview() {
+            previewFrame.srcdoc = buildDocument();
+            setStatus("Preview updated", true);
+        }
+
+        function resetEditors() {
+            htmlEditor.value = starter.html;
+            cssEditor.value = starter.css;
+            jsEditor.value = starter.js;
+            runPreview();
+        }
+
+        function downloadHTML() {
+            const content = buildDocument();
+            const blob = new Blob([content], { type: "text/html;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "website.html";
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(url);
+            setStatus("Downloaded website.html", true);
+        }
+
+        async function copyHTML() {
+            try {
+                await navigator.clipboard.writeText(buildDocument());
+                setStatus("Copied full HTML to clipboard", true);
+            } catch (error) {
+                setStatus("Clipboard unavailable in this browser", false);
+            }
+        }
+
+        document.getElementById("runBtn").addEventListener("click", runPreview);
+        document.getElementById("resetBtn").addEventListener("click", resetEditors);
+        document.getElementById("downloadBtn").addEventListener("click", downloadHTML);
+        document.getElementById("copyBtn").addEventListener("click", copyHTML);
+
+        [htmlEditor, cssEditor, jsEditor].forEach((editor) => {
+            editor.addEventListener("keydown", (event) => {
+                if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "enter") {
+                    event.preventDefault();
+                    runPreview();
+                }
+            });
+        });
+
+        resetEditors();
+    </script>
+</body>
+</html>
